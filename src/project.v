@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 Jordan Wong
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -14,12 +14,6 @@ module tt_um_uwasic_onboarding_Jordan_Wong (
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
-);
-
-
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
 
   // Add this inside the module block
   assign uio_oe = 8'hFF; // Set all IOs to output
@@ -30,7 +24,6 @@ module tt_um_uwasic_onboarding_Jordan_Wong (
   wire [7:0] en_reg_pwm_7_0;
   wire [7:0] en_reg_pwm_15_8;
   wire [7:0] pwm_duty_cycle;
-
   // Instantiate the PWM module
   pwm_peripheral pwm_peripheral_inst (
     .clk(clk),
@@ -42,7 +35,18 @@ module tt_um_uwasic_onboarding_Jordan_Wong (
     .pwm_duty_cycle(pwm_duty_cycle),
     .out({uio_out, uo_out})
   );
+  
   // Add uio_in and ui_in[7:3] to the list of unused signals:
   wire _unused = &{ena, ui_in[7:3], uio_in, 1'b0};
+);
+
+
+  // All output pins must be assigned. If not used, assign to 0.
+  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
+  assign uio_out = 0;
+
+ 
+
+  
 
 endmodule
