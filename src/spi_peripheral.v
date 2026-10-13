@@ -14,7 +14,7 @@ module spi_peripheral (
     output reg [7:0] en_reg_pwm_15_8,
     output reg [7:0] pwm_duty_cycle
 );
-
+    localparam max_address = 7'h04;
     // Three-stage synchronizers for external SPI signals
     reg [2:0] sclk_sync;
     reg [2:0] copi_sync;
@@ -74,7 +74,7 @@ module spi_peripheral (
         transaction_complete <= 1'b0;
 
         end else if (cs_rise) begin
-            if((rw_bit == 1'b1) && transaction_complete && address < 7'h05)begin
+            if((rw_bit == 1'b1) && transaction_complete && address <= max_address)begin
                 case(address)
                     7'h00: en_reg_out_7_0  <= data;
                     7'h01: en_reg_out_15_8 <= data;
@@ -84,12 +84,11 @@ module spi_peripheral (
                     default: ;
                 endcase
             end
-
-        end else if (cs_rise) begin
-            // Chip is not selected: discard any partial transaction
-            shift_reg    <= 8'b0;
-            bit_count    <= 4'b0;   
-            address      <= 7'b0;
+            shift_reg        <= 8'b0;
+            bit_count        <= 4'b0;
+            address          <= 7'b0;
+            rw_bit           <= 1'b0;
+            data             <= 8'b0;
             transaction_complete <= 1'b0;
 
         end else if (sclk_rise && !transaction_complete) begin
