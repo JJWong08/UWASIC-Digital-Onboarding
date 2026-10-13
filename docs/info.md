@@ -10,10 +10,10 @@ You can also include images in this folder and reference them in the markdown. E
 ## How it works
 This project involves creating a compliant SPI peripheral module and a PWM testbench.
 
-<!-- ## How to test
+## How to test
 
-Explain how to use your project
+There are various tests that will be programmed in test.py to test the functionality of the spi_peripheral module.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any -->
+SPI peripheral and PWM peripheral. 
