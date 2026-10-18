@@ -188,7 +188,7 @@ async def test_pwm_freq(dut):
     # duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
     dut._log.info("Find PWM frequency at 25% duty cycle")
     if duty != 0 and duty != 255:
-        frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
+        frequency = await get_frequency(dut.pwm_out)
         dut._log.info(f"Frequency of {frequency} Hz detected")
         assert (frequency >= 2970 and frequency <= 3030), "frequency is not 3000 Hz +- 1%"
         await ClockCycles(dut.clk,100)
@@ -199,7 +199,7 @@ async def test_pwm_freq(dut):
     duty = 0x80
     ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
     if duty != 0 and duty != 255:
-        frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
+        frequency = await get_frequency(dut.pwm_out)
         dut._log.info(f"Frequency of {frequency} Hz detected")
         assert (frequency >= 2970 and frequency <= 3030), "frequency is not 3000 Hz +- 1%"
         await ClockCycles(dut.clk,100)
@@ -210,7 +210,7 @@ async def test_pwm_freq(dut):
     duty = 0xC0
     ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
     if duty != 0 and duty != 255:
-        frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
+        frequency = await get_frequency(dut.pwm_out)
         dut._log.info(f"Frequency of {frequency} Hz detected")
         assert (frequency >= 2970 and frequency <= 3030), "frequency is not 3000 Hz +- 1%"
         await ClockCycles(dut.clk,100)
