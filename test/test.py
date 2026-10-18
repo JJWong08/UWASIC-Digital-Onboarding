@@ -181,10 +181,11 @@ async def test_pwm_freq(dut):
     ui_in_val = await send_spi_transaction(dut,1,0x01, 0x01)
     ui_in_val = await send_spi_transaction(dut,1,0x02,0x01)
     ui_in_val = await send_spi_transaction(dut,1,0x03,0x01)
-    ui_in_val = await send_spi_transaction(dut,1,0x04, 0x40)
+    duty = 0x40
+    ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
 
 
-    duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
+    # duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
     dut._log.info("Find PWM frequency at 25% duty cycle")
     if duty != 0 and duty != 255:
         frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
@@ -193,10 +194,10 @@ async def test_pwm_freq(dut):
         await ClockCycles(dut.clk,100)
     else:
         dut._log.info("Cannot detect frequency when duty cycle is 0% or 100%.")
-        duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
     
     dut._log.info("Now, find PWM frequency at 50% duty cycle")
-    ui_in_val = await send_spi_transaction(dut,1,0x04, 0x80)
+    duty = 0x80
+    ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
     if duty != 0 and duty != 255:
         frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
         dut._log.info(f"Frequency of {frequency} Hz detected")
@@ -206,7 +207,8 @@ async def test_pwm_freq(dut):
         dut._log.info("Cannot detect frequency when duty cycle is 0% or 100%.")
 
     dut._log.info("Now, find PWM frequency at 75% duty cycle")
-    ui_in_val = await send_spi_transaction(dut,1,0x04, 0xC0)
+    duty = 0xC0
+    ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
     if duty != 0 and duty != 255:
         frequency = await get_frequency(dut.user_project.pwm_peripheral_inst.pwm_signal)
         dut._log.info(f"Frequency of {frequency} Hz detected")
@@ -237,7 +239,6 @@ async def test_pwm_duty(dut):
             period = periodEnd - start
             return high_time/period
 
-    
 
 
     # Set the clock period to 100 ns (10 MHz)
@@ -261,33 +262,31 @@ async def test_pwm_duty(dut):
     ui_in_val = await send_spi_transaction(dut,1,0x01, 0x01)
     ui_in_val = await send_spi_transaction(dut,1,0x02,0x01)
     ui_in_val = await send_spi_transaction(dut,1,0x03,0x01)
-    ui_in_val = await send_spi_transaction(dut,1,0x04, 0x00)
-    await ClockCycles(dut.clk,5)
-    duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
+    duty = 0
+    ui_in_val = await send_spi_transaction(dut,1,0x04, duty)
     await ClockCycles(dut.clk,5)
 
     duty_cycle = await get_duty_cycle(dut.user_project.pwm_peripheral_inst.pwm_signal,duty)
     dut._log.info(f"%Duty cycle of {100*duty_cycle}% detected")
 
     dut._log.info(f"Now, write 50% duty cycle")
-    ui_in_val = await send_spi_transaction(dut,1,0x04,0x80)
-    duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
+    duty = 0x80
+    ui_in_val = await send_spi_transaction(dut,1,0x04,duty)
     await ClockCycles(dut.clk,5)
     duty_cycle = await get_duty_cycle(dut.user_project.pwm_peripheral_inst.pwm_signal,duty)
     dut._log.info(f"%Duty cycle of {100*duty_cycle}% detected")
 
     dut._log.info(f"Now, write 75% duty cycle")
-    ui_in_val = await send_spi_transaction(dut,1,0x04,0xC0)
-    duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
+    duty = 0xC0
+    ui_in_val = await send_spi_transaction(dut,1,0x04,duty)
     await ClockCycles(dut.clk,5)
     duty_cycle = await get_duty_cycle(dut.user_project.pwm_peripheral_inst.pwm_signal,duty)
     dut._log.info(f"%Duty cycle of {100*duty_cycle}% detected")
 
     dut._log.info(f"Now, write 100% duty cycle")
-    ui_in_val = await send_spi_transaction(dut,1,0x04,0xFF)
-    duty = int(dut.user_project.pwm_peripheral_inst.pwm_duty_cycle.value)
+    duty = 0xFF
+    ui_in_val = await send_spi_transaction(dut,1,0x04,duty)
     await ClockCycles(dut.clk,5)
     duty_cycle = await get_duty_cycle(dut.user_project.pwm_peripheral_inst.pwm_signal,duty)
     dut._log.info(f"%Duty cycle of {100*duty_cycle}% detected")
-
     dut._log.info("PWM Duty Cycle test completed successfully")
