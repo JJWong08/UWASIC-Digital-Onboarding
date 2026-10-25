@@ -34,9 +34,8 @@ module spi_peripheral (
 
     // Detect a rising edge of the synchronized SPI clock
     wire sclk_rise = !sclk_sync[2] && sclk_sync[1];
-
     wire cs_rise = !cs_sync[2] && cs_sync[1];
-    wire cs_fall = cs_sync[2] && !cs_sync[1];
+  
 
     // SPI byte receiver
     reg [15:0] shift_reg;
@@ -54,11 +53,6 @@ module spi_peripheral (
             pwm_duty_cycle   <= 8'b0;
             transaction_complete <= 1'b0;
 
-        end else if (cs_fall) begin
-        shift_reg <= 16'b0;
-        bit_count <= 4'b0;
-        transaction_complete <= 1'b0;
-
         end else if (cs_rise) begin
             if(shift_reg[15] == 1'b1 && transaction_complete)begin
                 case(shift_reg[14:8])
@@ -69,10 +63,9 @@ module spi_peripheral (
                     7'h04: pwm_duty_cycle  <= shift_reg[7:0];
                     default: ;
                 endcase
+                bit_count <= 4'b0;
+                transaction_complete <= 1'b0;
             end
-            shift_reg        <= 16'b0;
-            bit_count        <= 4'b0;
-            transaction_complete <= 1'b0;
 
         end else if (sclk_rise && !transaction_complete) begin    
             shift_reg <= {shift_reg[14:0],copi_sync[2]};

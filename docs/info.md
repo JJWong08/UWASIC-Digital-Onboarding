@@ -12,7 +12,7 @@ This project involves creating a compliant SPI peripheral module and a PWM testb
 
 ## How to test
 
-There are various tests that will be programmed in test.py to test the functionality of the spi_peripheral module.
+There are various tests that will be programmed in test.py to test the functionality of the spi_peripheral module. Specifically, the writing capabilities is verified, PWM frequncy is verified and the PWM duty cycle is verified to be functioning correctly.
 
 ## External hardware
 
