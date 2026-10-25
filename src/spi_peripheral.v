@@ -43,10 +43,6 @@ module spi_peripheral (
     reg [3:0] bit_count;
     reg transaction_complete;
 
-    // Value that would result from shifting in the next bit
-    wire [15:0] data = {shift_reg[14:0], copi_sync[2]};
-
-
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             shift_reg        <= 16'b0;
@@ -79,7 +75,7 @@ module spi_peripheral (
             transaction_complete <= 1'b0;
 
         end else if (sclk_rise && !transaction_complete) begin    
-            shift_reg <= data; 
+            shift_reg <= {shift_reg[14:0],copi_sync[2]};
             if(bit_count == 4'd15) begin
                 transaction_complete <= 1'b1;
             end
